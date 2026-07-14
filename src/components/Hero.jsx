@@ -55,7 +55,7 @@ export default function Hero() {
 
   return (
     <section className="w-full pb-12 select-none">
-      <div className="relative w-full aspect-[16/7] md:aspect-[21/8] min-h-[380px] sm:min-h-[460px] rounded-none overflow-hidden bg-neutral-100 shadow-sm transition-all duration-700">
+      <div className="relative w-full aspect-[16/6.5] md:aspect-[21/7.5] min-h-[370px] sm:min-h-[440px] rounded-none overflow-hidden bg-neutral-100 shadow-sm transition-all duration-700">
         
         {/* Slide Images */}
         {slides.map((slide, idx) => (
