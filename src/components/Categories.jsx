@@ -40,7 +40,7 @@ export default function Categories() {
       <div className="w-full">
         <div className="relative w-full overflow-hidden">
           {/* Scrolling Track - No gap on track, padding is on the child elements */}
-          <div className="flex animate-marquee hover:[animation-play-state:paused] py-4">
+          <div className="flex animate-marquee py-4">
             {doubleCategories.map((item, idx) => (
               <div 
                 key={idx} 
