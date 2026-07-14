@@ -2,6 +2,7 @@ import React from 'react';
 import Header from './components/Header';
 import Categories from './components/Categories';
 import Hero from './components/Hero';
+import NewArrivals from './components/NewArrivals';
 
 function App() {
   return (
@@ -14,6 +15,9 @@ function App() {
 
       {/* Hero Showcase slider */}
       <Hero />
+
+      {/* New Arrivals Section */}
+      <NewArrivals />
     </div>
   );
 }
