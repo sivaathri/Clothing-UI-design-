@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 
 const arrivals = [
-  { id: 1, name: 'Jacket', image: '/images/shirts.png' },
-  { id: 2, name: 'Jacket', image: '/images/jacket.png' },
-  { id: 3, name: 'Men\'s Shorts', image: '/images/shorts.png' },
+  { id: 1, name: 'Shirts', image: '/images/shirts.png' },
+  { id: 2, name: 'Jeans', image: '/images/jeans.png' },
+  { id: 3, name: 'Fancy Top', image: '/images/fancy_top.png' },
   { id: 4, name: 'T-Shirts', image: '/images/tshirts.png' },
-  { id: 5, name: 'Hoodies', image: '/images/hoodies.png' },
-  { id: 6, name: 'Sweatshirts', image: '/images/sweatshirts.png' },
+  { id: 5, name: 'Sweatshirts', image: '/images/sweatshirts.png' },
+  { id: 6, name: 'Jacket', image: '/images/jacket.png' },
+  { id: 7, name: 'Hoodies', image: '/images/hoodies.png' },
+  { id: 8, name: 'Shorts', image: '/images/shorts.png' },
+  { id: 9, name: 'Dress', image: '/images/dress.png' },
+  { id: 10, name: 'Shoes', image: '/images/shoes.png' },
+  { id: 11, name: 'Accessories', image: '/images/accessories.png' },
 ];
 
 export default function NewArrivals() {
@@ -75,7 +80,7 @@ export default function NewArrivals() {
           <div 
             className="flex transition-transform duration-500 ease-out"
             style={{ 
-              transform: `translateX(-${currentIndex * 25}%)`,
+              transform: `translateX(-${currentIndex * (100 / arrivals.length)}%)`,
               width: `${(arrivals.length / itemsPerPage) * 100}%` 
             }}
           >
