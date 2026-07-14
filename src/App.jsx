@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import NewArrivals from './components/NewArrivals';
 import BestSellers from './components/BestSellers';
 import ScrollToTop from './components/ScrollToTop';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -23,6 +24,9 @@ function App() {
 
       {/* Best Sellers Section */}
       <BestSellers />
+
+      {/* Global Footer */}
+      <Footer />
 
       {/* Back to Top Button */}
       <ScrollToTop />

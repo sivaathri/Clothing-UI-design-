@@ -66,7 +66,7 @@ const productsData = {
     {
       id: 202,
       name: 'Premium Wool Tuxedo',
-      image: '/images/jacket.png',
+      image: '/images/shirts.png',
       price: 'Rs. 7,800.00',
       oldPrice: 'Rs. 9,500.00',
       onSale: true,
@@ -75,7 +75,7 @@ const productsData = {
     {
       id: 203,
       name: 'Casual Oversized Suit Jacket',
-      image: '/images/jacket.png',
+      image: '/images/tshirts.png',
       price: 'Rs. 4,800.00',
       onSale: false,
       colors: ['#c5a880', '#000000']
@@ -83,7 +83,7 @@ const productsData = {
     {
       id: 204,
       name: 'Minimalist Charcoal Blazer',
-      image: '/images/jacket.png',
+      image: '/images/sweatshirts.png',
       price: 'Rs. 4,200.00',
       onSale: false,
       colors: ['#808080']
@@ -100,7 +100,7 @@ const productsData = {
     {
       id: 206,
       name: 'Modern Street Fit Tuxedo',
-      image: '/images/jacket.png',
+      image: '/images/shirts.png',
       price: 'Rs. 6,500.00',
       onSale: false,
       colors: ['#000000', '#ffffff']
@@ -118,7 +118,7 @@ const productsData = {
     {
       id: 302,
       name: 'Relaxed Utility Cargo Pants',
-      image: '/images/jeans.png',
+      image: '/images/hoodies.png',
       price: 'Rs. 2,100.00',
       onSale: false,
       colors: ['#808080', '#000000']
@@ -126,7 +126,7 @@ const productsData = {
     {
       id: 303,
       name: 'Linen Summer Trousers',
-      image: '/images/jeans.png',
+      image: '/images/dress.png',
       price: 'Rs. 1,800.00',
       oldPrice: 'Rs. 2,200.00',
       onSale: true,
@@ -143,7 +143,7 @@ const productsData = {
     {
       id: 305,
       name: 'Washed Indigo Denim Jeans',
-      image: '/images/jeans.png',
+      image: '/images/hoodies.png',
       price: 'Rs. 2,200.00',
       onSale: false,
       colors: ['#3b5998']
@@ -151,7 +151,7 @@ const productsData = {
     {
       id: 306,
       name: 'Minimal Utility Cargo',
-      image: '/images/jeans.png',
+      image: '/images/dress.png',
       price: 'Rs. 1,700.00',
       oldPrice: 'Rs. 2,100.00',
       onSale: true,
@@ -170,7 +170,7 @@ const productsData = {
     {
       id: 402,
       name: 'Linen Summer Shorts',
-      image: '/images/shorts.png',
+      image: '/images/sweatshirts.png',
       price: 'Rs. 1,100.00',
       onSale: false,
       colors: ['#c5a880', '#ffffff']
@@ -187,7 +187,7 @@ const productsData = {
     {
       id: 404,
       name: 'Tailored Pleated Shorts',
-      image: '/images/shorts.png',
+      image: '/images/sweatshirts.png',
       price: 'Rs. 1,450.00',
       onSale: false,
       colors: ['#000000', '#c5a880']
@@ -204,7 +204,7 @@ const productsData = {
     {
       id: 406,
       name: 'Urban Cargo Shorts Pack',
-      image: '/images/shorts.png',
+      image: '/images/sweatshirts.png',
       price: 'Rs. 1,500.00',
       onSale: false,
       colors: ['#000000']
@@ -259,7 +259,7 @@ export default function BestSellers() {
           <button
             key={tab}
             onClick={() => selectTab(tab)}
-            className={`text-sm font-semibold tracking-wide uppercase pb-3.5 transition-all duration-300 relative cursor-pointer ${
+            className={`text-sm font-semibold tracking-wide uppercase pb-3.5 transition-all duration-300 relative cursor-pointer focus:outline-none ${
               activeTab === tab ? 'text-neutral-900 font-bold' : 'text-neutral-400 hover:text-neutral-700'
             }`}
           >
@@ -282,7 +282,7 @@ export default function BestSellers() {
           <div className="w-px h-10 bg-neutral-200"></div>
           <button 
             onClick={handlePrev}
-            className="text-[10px] tracking-[0.3em] font-black text-neutral-400 hover:text-black cursor-pointer transition-all duration-300 py-2 [writing-mode:vertical-lr] rotate-180 select-none hover:scale-105 active:scale-95"
+            className="text-[10px] tracking-[0.3em] font-black text-neutral-400 hover:text-black cursor-pointer transition-all duration-300 py-2 [writing-mode:vertical-lr] rotate-180 select-none hover:scale-105 active:scale-95 focus:outline-none"
           >
             PREVIOUS
           </button>
@@ -296,7 +296,7 @@ export default function BestSellers() {
 
           <button 
             onClick={handleNext}
-            className="text-[10px] tracking-[0.3em] font-black text-neutral-400 hover:text-black cursor-pointer transition-all duration-300 py-2 [writing-mode:vertical-lr] rotate-180 select-none hover:scale-105 active:scale-95"
+            className="text-[10px] tracking-[0.3em] font-black text-neutral-400 hover:text-black cursor-pointer transition-all duration-300 py-2 [writing-mode:vertical-lr] rotate-180 select-none hover:scale-105 active:scale-95 focus:outline-none"
           >
             NEXT
           </button>
