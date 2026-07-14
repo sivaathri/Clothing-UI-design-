@@ -60,7 +60,7 @@ export default function Header() {
         {/* Logo */}
         <div className="flex-shrink-0">
           <a href="#" className="text-2xl font-bold tracking-[0.25em] text-gray-900 select-none hover:opacity-80 transition-opacity">
-            ARLUNE
+           Clothes
           </a>
         </div>
 
