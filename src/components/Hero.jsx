@@ -54,8 +54,8 @@ export default function Hero() {
   const current = slides[activeSlide];
 
   return (
-    <section className="w-full px-4 sm:px-8 lg:px-12 pb-12 select-none">
-      <div className="relative w-full aspect-[16/8] md:aspect-[21/9] min-h-[480px] sm:min-h-[520px] rounded-[2rem] overflow-hidden bg-neutral-100 shadow-sm transition-all duration-700">
+    <section className="w-full pb-12 select-none">
+      <div className="relative w-full aspect-[16/8] md:aspect-[21/9] min-h-[480px] sm:min-h-[520px] rounded-none overflow-hidden bg-neutral-100 shadow-sm transition-all duration-700">
         
         {/* Slide Images */}
         {slides.map((slide, idx) => (
