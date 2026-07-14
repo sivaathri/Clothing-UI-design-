@@ -1,8 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, User, Heart, ShoppingBag, ChevronDown, Menu, X } from 'lucide-react';
+
+const allProducts = [
+  { name: 'Shirts', image: '/images/shirts.png', price: 'Rs. 1,500.00' },
+  { name: 'Jeans', image: '/images/jeans.png', price: 'Rs. 2,400.00' },
+  { name: 'Fancy Top', image: '/images/fancy_top.png', price: 'Rs. 1,200.00' },
+  { name: 'T-Shirts', image: '/images/tshirts.png', price: 'Rs. 1,250.00' },
+  { name: 'Sweatshirts', image: '/images/sweatshirts.png', price: 'Rs. 1,800.00' },
+  { name: 'Jacket', image: '/images/jacket.png', price: 'Rs. 3,500.00' },
+  { name: 'Hoodies', image: '/images/hoodies.png', price: 'Rs. 2,800.00' },
+  { name: 'Shorts', image: '/images/shorts.png', price: 'Rs. 1,200.00' },
+  { name: 'Dress', image: '/images/dress.png', price: 'Rs. 2,900.00' },
+  { name: 'Shoes', image: '/images/shoes.png', price: 'Rs. 3,200.00' },
+  { name: 'Accessories', image: '/images/accessories.png', price: 'Rs. 850.00' },
+  { name: 'Striped Knit Bandeau Crop Top', image: '/images/fancy_top.png', price: 'Rs. 1,200.00' },
+  { name: 'Sleeveless Ribbed T-Shirt', image: '/images/crop_black.png', price: 'Rs. 1,250.00' },
+  { name: 'Snappy Crop Top', image: '/images/crop_beige.png', price: 'Rs. 650.00' },
+  { name: 'Ruffle Strappy Crop Top With', image: '/images/crop_ruffle.png', price: 'Rs. 1,400.00' },
+  { name: 'Tailored Blazer Jacket', image: '/images/jacket.png', price: 'Rs. 3,500.00' },
+  { name: 'Premium Wool Tuxedo', image: '/images/shirts.png', price: 'Rs. 7,800.00' },
+];
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Lock body scroll when search is open
+  useEffect(() => {
+    if (isSearchOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isSearchOpen]);
 
   const navItems = [
     { name: 'Shop', hasDropdown: true },
@@ -13,6 +47,11 @@ export default function Header() {
     { name: 'Blog', hasDropdown: false },
     { name: 'Pages', hasDropdown: true },
   ];
+
+  // Filter products based on search query
+  const searchResults = searchQuery
+    ? allProducts.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    : [];
 
   return (
     <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 transition-all duration-300">
@@ -32,7 +71,7 @@ export default function Header() {
               key={item.name} 
               className={`${item.name === 'Shop' ? '' : 'relative'} group py-2`}
             >
-              <button className="flex items-center text-[15px] font-medium text-gray-700 hover:text-black transition-colors duration-200 cursor-pointer">
+              <button className="flex items-center text-[15px] font-medium text-gray-700 hover:text-black transition-colors duration-200 cursor-pointer focus:outline-none">
                 {item.name}
                 {item.hasDropdown && (
                   <ChevronDown className="w-4.5 h-4.5 ml-1 text-gray-400 group-hover:text-black transition-transform duration-300 group-hover:rotate-180" />
@@ -168,16 +207,20 @@ export default function Header() {
 
         {/* Right Icons */}
         <div className="flex items-center space-x-6">
-          <button className="text-gray-700 hover:text-black p-1 transition-colors cursor-pointer" aria-label="Search">
+          <button 
+            onClick={() => setIsSearchOpen(true)}
+            className="text-gray-700 hover:text-black p-1 transition-colors cursor-pointer focus:outline-none" 
+            aria-label="Search"
+          >
             <Search className="w-5.5 h-5.5 stroke-[1.5]" />
           </button>
           
-          <button className="text-gray-700 hover:text-black p-1 transition-colors cursor-pointer" aria-label="Account">
+          <button className="text-gray-700 hover:text-black p-1 transition-colors cursor-pointer focus:outline-none" aria-label="Account">
             <User className="w-5.5 h-5.5 stroke-[1.5]" />
           </button>
 
           {/* Wishlist */}
-          <button className="relative text-gray-700 hover:text-black p-1 transition-colors cursor-pointer" aria-label="Wishlist">
+          <button className="relative text-gray-700 hover:text-black p-1 transition-colors cursor-pointer focus:outline-none" aria-label="Wishlist">
             <Heart className="w-5.5 h-5.5 stroke-[1.5]" />
             <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] font-bold w-4.5 h-4.5 flex items-center justify-center rounded-full border border-white">
               2
@@ -185,7 +228,7 @@ export default function Header() {
           </button>
 
           {/* Cart */}
-          <button className="flex items-center space-x-1.5 text-gray-700 hover:text-black p-1 transition-colors cursor-pointer" aria-label="Cart">
+          <button className="flex items-center space-x-1.5 text-gray-700 hover:text-black p-1 transition-colors cursor-pointer focus:outline-none" aria-label="Cart">
             <span className="text-[15px] font-medium hidden sm:inline">Cart</span>
             <div className="relative">
               <ShoppingBag className="w-5.5 h-5.5 stroke-[1.5]" />
@@ -197,7 +240,7 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button 
-            className="lg:hidden text-gray-700 hover:text-black p-1 transition-colors cursor-pointer"
+            className="lg:hidden text-gray-700 hover:text-black p-1 transition-colors cursor-pointer focus:outline-none"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -212,7 +255,7 @@ export default function Header() {
           <div className="flex flex-col space-y-4">
             {navItems.map((item) => (
               <div key={item.name} className="border-b border-gray-50 pb-2">
-                <button className="flex items-center justify-between w-full text-base font-medium text-gray-700 hover:text-black py-1">
+                <button className="flex items-center justify-between w-full text-base font-medium text-gray-700 hover:text-black py-1 focus:outline-none">
                   {item.name}
                   {item.hasDropdown && <ChevronDown className="w-4 h-4 text-gray-400" />}
                 </button>
@@ -227,6 +270,116 @@ export default function Header() {
           </div>
         </div>
       )}
+
+      {/* Backdrop Overlay for Search */}
+      <div 
+        className={`fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity duration-500 z-[90] ${
+          isSearchOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+        }`}
+        onClick={() => setIsSearchOpen(false)}
+      />
+
+      {/* Left to Right Search Drawer */}
+      <div 
+        className={`fixed top-0 left-0 h-full w-full sm:w-[460px] bg-white shadow-2xl transition-transform duration-500 ease-out z-[100] flex flex-col ${
+          isSearchOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        {/* Drawer Header */}
+        <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+          <span className="text-xs font-bold tracking-[0.25em] text-neutral-800 uppercase">
+            Search our store
+          </span>
+          <button 
+            onClick={() => setIsSearchOpen(false)}
+            className="text-neutral-500 hover:text-black transition-colors p-1 cursor-pointer focus:outline-none"
+          >
+            <X className="w-5 h-5 stroke-[1.5]" />
+          </button>
+        </div>
+
+        {/* Drawer Input Area */}
+        <div className="p-6">
+          <div className="relative border-b border-neutral-900 pb-2">
+            <input 
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Type to search products..."
+              className="w-full bg-transparent text-neutral-800 placeholder-neutral-400 text-sm focus:outline-none pr-8 font-medium"
+              autoFocus={isSearchOpen}
+            />
+            <Search className="w-5 h-5 text-neutral-400 absolute right-0 top-1/2 -translate-y-1/2 stroke-[1.5]" />
+          </div>
+        </div>
+
+        {/* Search Results Area */}
+        <div className="flex-1 overflow-y-auto px-6 pb-6 no-scrollbar">
+          {searchQuery && searchResults.length === 0 && (
+            <div className="text-center py-10 text-neutral-400 text-sm font-medium">
+              No products found for "{searchQuery}"
+            </div>
+          )}
+
+          {searchResults.length > 0 && (
+            <div className="space-y-4">
+              <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase block mb-2">
+                Products found ({searchResults.length})
+              </span>
+              <div className="space-y-3.5">
+                {searchResults.map((product, idx) => (
+                  <div key={idx} className="flex items-center space-x-4 p-2.5 rounded-xl hover:bg-neutral-50 transition-colors cursor-pointer group">
+                    <div className="w-14 h-16 rounded-lg overflow-hidden bg-neutral-50 flex items-center justify-center p-1 shrink-0">
+                      <img src={product.image} alt={product.name} className="w-full h-full object-contain object-bottom group-hover:scale-105 transition-transform duration-300" />
+                    </div>
+                    <div className="flex-1 min-w-0 text-left">
+                      <h4 className="text-sm font-semibold text-neutral-800 group-hover:text-black transition-colors truncate">
+                        {product.name}
+                      </h4>
+                      <p className="text-xs font-bold text-[#a47e65] mt-1">
+                        {product.price}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {!searchQuery && (
+            <div className="space-y-6 text-left py-4">
+              <div>
+                <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase block mb-3.5">
+                  Popular Searches
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {['Jacket', 'Fancy Top', 'Jeans', 'T-Shirts', 'Shorts'].map((term) => (
+                    <button 
+                      key={term}
+                      onClick={() => setSearchQuery(term)}
+                      className="text-xs font-semibold bg-neutral-50 border border-neutral-200 text-neutral-600 hover:bg-black hover:text-white hover:border-black transition-all px-3 py-1.5 rounded-full cursor-pointer focus:outline-none"
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase block mb-3.5">
+                  Need Help?
+                </span>
+                <div className="text-xs text-neutral-500 font-semibold space-y-1.5 leading-relaxed">
+                  <p>Contact Support: +1234 567 890</p>
+                  <p>Email: help@gmail.com</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+      </div>
+
     </header>
   );
 }
