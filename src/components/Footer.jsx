@@ -1,5 +1,4 @@
 import React from 'react';
-import { Facebook, Twitter, Instagram, Youtube, ChevronDown } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -61,22 +60,37 @@ export default function Footer() {
             </button>
           </div>
 
-          {/* Social Icons */}
+          {/* Social Icons (Inline SVGs) */}
           <div className="flex items-center space-x-5 pt-3 text-neutral-400">
+            {/* Facebook */}
             <a href="#" className="hover:text-white transition-colors cursor-pointer" aria-label="Facebook">
-              <Facebook className="w-5 h-5 stroke-[1.5]" />
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+              </svg>
             </a>
+            {/* Twitter / X */}
             <a href="#" className="hover:text-white transition-colors cursor-pointer" aria-label="Twitter">
-              <Twitter className="w-5 h-5 stroke-[1.5]" />
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+              </svg>
             </a>
+            {/* Instagram */}
             <a href="#" className="hover:text-white transition-colors cursor-pointer" aria-label="Instagram">
-              <Instagram className="w-5 h-5 stroke-[1.5]" />
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+              </svg>
             </a>
+            {/* YouTube */}
             <a href="#" className="hover:text-white transition-colors cursor-pointer" aria-label="YouTube">
-              <Youtube className="w-5 h-5 stroke-[1.5]" />
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
+                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" />
+              </svg>
             </a>
+            {/* TikTok */}
             <a href="#" className="hover:text-white transition-colors cursor-pointer" aria-label="TikTok">
-              {/* Custom vector TikTok svg */}
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                 <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.02 1.59 4.23.86.17 1.75.28 2.63.29V8.3c-1.42-.04-2.82-.44-4.04-1.19a8.47 8.47 0 0 1-.36 4.39c-.93 2.19-2.73 3.93-4.94 4.8-2.6 1.03-5.63.85-8.08-.47C.71 14.54-.48 11.53-.16 8.52c.3-2.77 2.01-5.32 4.6-6.33a8.9 8.9 0 0 1 7.21.36c.25-1.19.53-2.38.87-3.56zM8.33 5.4c-1.34.02-2.61.64-3.41 1.7a4.9 4.9 0 0 0 .15 5.86c.92 1.05 2.37 1.54 3.73 1.28 1.4-.26 2.6-1.32 3.03-2.67.45-1.44.11-3.08-.88-4.17-.7-.76-1.68-1.2-2.62-1.2z" />
               </svg>
@@ -105,13 +119,17 @@ export default function Footer() {
                   <div className="bg-[#128807] h-1"></div>
                 </div>
                 <span>India (INR ₹)</span>
-                <ChevronDown className="w-3.5 h-3.5 text-neutral-500" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 text-neutral-500">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
               </div>
 
               {/* Language Selection Button */}
               <div className="flex items-center space-x-2 bg-[#0c0c0c] border border-neutral-800 rounded-sm px-3.5 py-2 text-xs font-semibold text-neutral-400 hover:text-white cursor-pointer transition-colors focus:outline-none">
                 <span>English</span>
-                <ChevronDown className="w-3.5 h-3.5 text-neutral-500" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 text-neutral-500">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
               </div>
 
             </div>
