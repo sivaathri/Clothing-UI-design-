@@ -364,7 +364,13 @@ export default function BestSellers() {
             ))}
           </div>
         </div>
+      </div>
 
+      {/* Centered View All Products Button */}
+      <div className="flex justify-center mt-12">
+        <button className="bg-[#a47e65] hover:bg-neutral-900 text-white text-xs font-bold tracking-[0.25em] uppercase px-10 py-4 transition-colors duration-300 cursor-pointer shadow-sm active:scale-98 select-none">
+          ALL PRODUCTS
+        </button>
       </div>
     </section>
   );
