@@ -8,7 +8,7 @@ const slides = [
     heading: 'TRENDS & LOOK',
     paragraph: 'Elevate your style with our curated collection of trending outfits for every occasion.',
     buttonText: 'SHOP NEW COLLECTION',
-    image: '/images/hero_beach.png',
+    image: '/images/herobg.png',
     align: 'right'
   },
   {
@@ -55,7 +55,7 @@ export default function Hero() {
 
   return (
     <section className="w-full pb-12 select-none">
-      <div className="relative w-full aspect-[16/8] md:aspect-[21/9] min-h-[480px] sm:min-h-[520px] rounded-none overflow-hidden bg-neutral-100 shadow-sm transition-all duration-700">
+      <div className="relative w-full aspect-[16/6] md:aspect-[3/1] min-h-[360px] sm:min-h-[420px] rounded-none overflow-hidden bg-neutral-100 shadow-sm transition-all duration-700">
         
         {/* Slide Images */}
         {slides.map((slide, idx) => (
