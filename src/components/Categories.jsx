@@ -38,7 +38,7 @@ export default function Categories() {
   return (
     <section className="w-full pt-5 pb-2.5 border-b border-gray-100 overflow-hidden bg-white select-none">
       <div className="w-full">
-        <div className="relative w-full overflow-hidden">
+        <div className="relative w-full overflow-hidden mask-marquee">
           {/* Scrolling Track - No gap on track, padding is on the child elements */}
           <div className="flex animate-marquee pt-4 pb-2">
             {doubleCategories.map((item, idx) => (
