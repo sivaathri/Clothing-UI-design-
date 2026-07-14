@@ -62,14 +62,14 @@ export default function NewArrivals() {
           <div className="w-px h-10 bg-neutral-200"></div>
           <button 
             onClick={handlePrev}
-            className="text-[10px] tracking-[0.3em] font-black text-neutral-800 hover:text-neutral-950 transition-colors py-2 [writing-mode:vertical-lr] rotate-180 select-none active:scale-95"
+            className="text-[10px] tracking-[0.3em] font-black text-neutral-400 hover:text-black cursor-pointer transition-all duration-300 py-2 [writing-mode:vertical-lr] rotate-180 select-none hover:scale-105 active:scale-95"
           >
             PREVIOUS
           </button>
           <div className="w-px h-10 bg-neutral-200"></div>
           <button 
             onClick={handleNext}
-            className="text-[10px] tracking-[0.3em] font-black text-neutral-800 hover:text-neutral-950 transition-colors py-2 [writing-mode:vertical-lr] rotate-180 select-none active:scale-95"
+            className="text-[10px] tracking-[0.3em] font-black text-neutral-400 hover:text-black cursor-pointer transition-all duration-300 py-2 [writing-mode:vertical-lr] rotate-180 select-none hover:scale-105 active:scale-95"
           >
             NEXT
           </button>
