@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Categories from './components/Categories';
 import Hero from './components/Hero';
 import NewArrivals from './components/NewArrivals';
+import BestSellers from './components/BestSellers';
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
 
       {/* New Arrivals Section */}
       <NewArrivals />
+
+      {/* Best Sellers Section */}
+      <BestSellers />
     </div>
   );
 }
