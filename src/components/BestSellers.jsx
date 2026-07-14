@@ -14,7 +14,7 @@ const productsData = {
     {
       id: 102,
       name: 'Sleeveless Ribbed T-Shirt',
-      image: '/images/fancy_top.png',
+      image: '/images/crop_black.png',
       price: 'Rs. 1,250.00',
       onSale: false,
       colors: ['#ffffff', '#000000']
@@ -22,7 +22,7 @@ const productsData = {
     {
       id: 103,
       name: 'Snappy Crop Top',
-      image: '/images/fancy_top.png',
+      image: '/images/crop_beige.png',
       price: 'Rs. 650.00',
       oldPrice: 'Rs. 850.00',
       onSale: true,
@@ -31,7 +31,7 @@ const productsData = {
     {
       id: 104,
       name: 'Ruffle Strappy Crop Top With',
-      image: '/images/fancy_top.png',
+      image: '/images/crop_ruffle.png',
       price: 'Rs. 1,400.00',
       onSale: false,
       colors: ['#ffffff']
@@ -48,7 +48,7 @@ const productsData = {
     {
       id: 106,
       name: 'Elegant Asymmetric Top',
-      image: '/images/fancy_top.png',
+      image: '/images/crop_black.png',
       price: 'Rs. 1,600.00',
       onSale: false,
       colors: ['#000000', '#ffffff']
