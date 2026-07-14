@@ -36,7 +36,7 @@ export default function Categories() {
   const doubleCategories = [...categories, ...categories];
 
   return (
-    <section className="w-full px-4 sm:px-8 lg:px-12 pt-5 pb-2.5 border-b border-gray-100 overflow-hidden bg-white select-none">
+    <section className="w-full pt-5 pb-2.5 border-b border-gray-100 overflow-hidden bg-white select-none">
       <div className="w-full">
         <div className="relative w-full overflow-hidden">
           {/* Scrolling Track - No gap on track, padding is on the child elements */}
