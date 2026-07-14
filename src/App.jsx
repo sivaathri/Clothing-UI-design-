@@ -4,6 +4,7 @@ import Categories from './components/Categories';
 import Hero from './components/Hero';
 import NewArrivals from './components/NewArrivals';
 import BestSellers from './components/BestSellers';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
@@ -22,6 +23,9 @@ function App() {
 
       {/* Best Sellers Section */}
       <BestSellers />
+
+      {/* Back to Top Button */}
+      <ScrollToTop />
     </div>
   );
 }
