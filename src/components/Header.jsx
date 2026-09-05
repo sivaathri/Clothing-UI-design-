@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search, User, Heart, ShoppingBag, ChevronDown, Menu, X, ChevronRight } from 'lucide-react';
 
 const allProducts = [
@@ -24,8 +24,23 @@ const allProducts = [
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
+  const [activeDropdown, setActiveDropdown] = useState(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const headerRef = useRef(null);
+
+  // Close dropdowns when clicking outside header
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (headerRef.current && !headerRef.current.contains(event.target)) {
+        setActiveDropdown(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Lock body scroll when search or mobile drawer is open
   useEffect(() => {
@@ -73,6 +88,10 @@ export default function Header() {
     },
   ];
 
+  const handleDropdownToggle = (name) => {
+    setActiveDropdown(prev => prev === name ? null : name);
+  };
+
   const toggleMobileCategory = (name) => {
     setExpandedMobileCategory(prev => prev === name ? null : name);
   };
@@ -83,12 +102,12 @@ export default function Header() {
     : [];
 
   return (
-    <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 transition-all duration-300">
-      <div className="w-full px-3 sm:px-6 lg:px-12 h-16 sm:h-20 flex items-center justify-between">
+    <header ref={headerRef} className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 transition-all duration-300">
+      <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-12 h-16 sm:h-20 flex items-center justify-between">
         
-        {/* Mobile menu burger button (left on mobile) */}
+        {/* Mobile menu burger button (left on mobile/tablet screens < 1024px) */}
         <button 
-          className="lg:hidden text-gray-700 hover:text-black p-1.5 transition-colors cursor-pointer focus:outline-none shrink-0"
+          className="lg:hidden text-gray-700 hover:text-black p-1.5 transition-colors cursor-pointer focus:outline-none shrink-0 mr-2"
           onClick={() => setMobileMenuOpen(true)}
           aria-label="Open navigation menu"
         >
@@ -103,138 +122,169 @@ export default function Header() {
         </div>
 
         {/* Desktop Nav (lg and above) */}
-        <nav className="hidden lg:flex space-x-6 xl:space-x-8">
-          {navItems.map((item) => (
-            <div 
-              key={item.name} 
-              className={`${item.name === 'Shop' ? '' : 'relative'} group py-2`}
-            >
-              <button className="flex items-center text-sm xl:text-[15px] font-medium text-gray-700 hover:text-black transition-colors duration-200 cursor-pointer focus:outline-none">
-                {item.name}
-                {item.hasDropdown && (
-                  <ChevronDown className="w-4 h-4 ml-1 text-gray-400 group-hover:text-black transition-transform duration-300 group-hover:rotate-180" />
-                )}
-              </button>
+        <nav className="hidden lg:flex space-x-3 xl:space-x-8">
+          {navItems.map((item) => {
+            const isOpen = activeDropdown === item.name;
+            return (
+              <div 
+                key={item.name} 
+                className={`${item.name === 'Shop' ? '' : 'relative'} group py-2`}
+              >
+                <button 
+                  onClick={() => item.hasDropdown && handleDropdownToggle(item.name)}
+                  className={`flex items-center text-xs xl:text-[15px] font-medium transition-colors duration-200 cursor-pointer focus:outline-none ${
+                    isOpen ? 'text-black font-bold' : 'text-gray-700 hover:text-black'
+                  }`}
+                >
+                  {item.name}
+                  {item.hasDropdown && (
+                    <ChevronDown className={`w-4 h-4 ml-1 text-gray-400 group-hover:text-black transition-transform duration-300 ${
+                      isOpen ? 'rotate-180 text-black' : 'group-hover:rotate-180'
+                    }`} />
+                  )}
+                </button>
 
-              {/* Mega Dropdown Menu for Shop */}
-              {item.hasDropdown && item.name === 'Shop' && (
-                <div className="absolute top-full left-0 right-0 w-full bg-white border-b border-gray-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                  <div className="max-w-[1440px] mx-auto px-6 lg:px-12 py-10 grid grid-cols-4 gap-8 divide-x divide-gray-100 text-left">
-                    
-                    {/* Column 1: Shop By Category */}
-                    <div className="pr-4">
-                      <div className="mb-6">
-                        <h3 className="text-xs font-bold tracking-[0.2em] text-neutral-900 uppercase pb-2 border-b border-black inline-block">
-                          SHOP BY CATEGORY
-                        </h3>
+                {/* Mega Dropdown Menu for Shop */}
+                {item.hasDropdown && item.name === 'Shop' && (
+                  <div className={`absolute top-full left-0 right-0 w-full bg-white border-b border-gray-100 shadow-xl transition-all duration-300 z-50 ${
+                    isOpen ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible group-hover:opacity-100 group-hover:visible'
+                  }`}>
+                    <div className="max-w-[1440px] mx-auto px-6 lg:px-12 py-10 grid grid-cols-4 gap-8 divide-x divide-gray-100 text-left">
+                      
+                      {/* Column 1: Shop By Category */}
+                      <div className="pr-4">
+                        <div className="mb-6">
+                          <h3 className="text-xs font-bold tracking-[0.2em] text-neutral-900 uppercase pb-2 border-b border-black inline-block">
+                            SHOP BY CATEGORY
+                          </h3>
+                        </div>
+                        <ul className="space-y-3.5 text-[14px] text-neutral-500 font-medium">
+                          {item.subCategories.map((sub, sIdx) => (
+                            <li key={sIdx}>
+                              <a 
+                                href="#" 
+                                onClick={(e) => { e.preventDefault(); setActiveDropdown(null); }}
+                                className="hover:text-black transition-colors block"
+                              >
+                                {sub}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
-                      <ul className="space-y-3.5 text-[14px] text-neutral-500 font-medium">
-                        {item.subCategories.map((sub, sIdx) => (
-                          <li key={sIdx}><a href="#" className="hover:text-black transition-colors block">{sub}</a></li>
-                        ))}
-                      </ul>
-                    </div>
 
-                    {/* Column 2: Trending */}
-                    <div className="pl-8 pr-4">
-                      <div className="mb-6">
-                        <h3 className="text-xs font-bold tracking-[0.2em] text-neutral-900 uppercase pb-2 border-b border-black inline-block">
-                          TRENDING
-                        </h3>
-                      </div>
-                      <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-                        <div className="flex flex-col items-center text-center group/item cursor-pointer">
-                          <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-100 p-0.5 group-hover/item:border-black transition-colors duration-300">
-                            <img src="/images/shirts.png" alt="Shirts" className="w-full h-full object-cover rounded-full transition-transform duration-300 group-hover/item:scale-105" />
-                          </div>
-                          <span className="mt-2 text-xs font-medium text-neutral-600 group-hover/item:text-black transition-colors">Shirts</span>
+                      {/* Column 2: Trending */}
+                      <div className="pl-8 pr-4">
+                        <div className="mb-6">
+                          <h3 className="text-xs font-bold tracking-[0.2em] text-neutral-900 uppercase pb-2 border-b border-black inline-block">
+                            TRENDING
+                          </h3>
                         </div>
-                        <div className="flex flex-col items-center text-center group/item cursor-pointer">
-                          <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-100 p-0.5 group-hover/item:border-black transition-colors duration-300">
-                            <img src="/images/fancy_top.png" alt="Fancy Top" className="w-full h-full object-cover rounded-full transition-transform duration-300 group-hover/item:scale-105" />
-                          </div>
-                          <span className="mt-2 text-xs font-medium text-neutral-600 group-hover/item:text-black transition-colors">Fancy Top</span>
-                        </div>
-                        <div className="flex flex-col items-center text-center group/item cursor-pointer">
-                          <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-100 p-0.5 group-hover/item:border-black transition-colors duration-300">
-                            <img src="/images/jacket.png" alt="Pants" className="w-full h-full object-cover rounded-full transition-transform duration-300 group-hover/item:scale-105" />
-                          </div>
-                          <span className="mt-2 text-xs font-medium text-neutral-600 group-hover/item:text-black transition-colors">Pants</span>
-                        </div>
-                        <div className="flex flex-col items-center text-center group/item cursor-pointer">
-                          <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-100 p-0.5 group-hover/item:border-black transition-colors duration-300">
-                            <img src="/images/shorts.png" alt="Shorts" className="w-full h-full object-cover rounded-full transition-transform duration-300 group-hover/item:scale-105" />
-                          </div>
-                          <span className="mt-2 text-xs font-medium text-neutral-600 group-hover/item:text-black transition-colors">Shorts</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Column 3: More to Explore */}
-                    <div className="pl-8 pr-4">
-                      <div className="mb-6">
-                        <h3 className="text-xs font-bold tracking-[0.2em] text-neutral-900 uppercase pb-2 border-b border-black inline-block">
-                          MORE TO EXPLORE
-                        </h3>
-                      </div>
-                      <div className="space-y-4">
-                        {[
-                          { name: 'Fancy Top', img: '/images/fancy_top.png' },
-                          { name: 'Jacket', img: '/images/jacket.png' },
-                          { name: 'Jeans', img: '/images/jeans.png' },
-                          { name: 'Men\'s Shorts', img: '/images/shorts.png' },
-                          { name: 'Pants', img: '/images/shirts.png' },
-                        ].map((item, idx) => (
-                          <div key={idx} className="flex items-center space-x-3 group/explore cursor-pointer">
-                            <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-100 p-0.5 group-hover/explore:border-black transition-colors duration-300">
-                              <img src={item.img} alt={item.name} className="w-full h-full object-cover rounded-full" />
+                        <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+                          <div onClick={() => setActiveDropdown(null)} className="flex flex-col items-center text-center group/item cursor-pointer">
+                            <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-100 p-0.5 group-hover/item:border-black transition-colors duration-300">
+                              <img src="/images/shirts.png" alt="Shirts" className="w-full h-full object-cover rounded-full transition-transform duration-300 group-hover/item:scale-105" />
                             </div>
-                            <span className="text-xs font-semibold text-neutral-500 group-hover/explore:text-black transition-colors">{item.name}</span>
+                            <span className="mt-2 text-xs font-medium text-neutral-600 group-hover/item:text-black transition-colors">Shirts</span>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Column 4: Featured */}
-                    <div className="pl-8">
-                      <div className="mb-6">
-                        <h3 className="text-xs font-bold tracking-[0.2em] text-neutral-900 uppercase pb-2 border-b border-black inline-block">
-                          FEATURED
-                        </h3>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        {[
-                          { name: 'SHIRTS', img: '/images/shirts.png' },
-                          { name: 'MEN\'S SHORTS', img: '/images/shorts.png' },
-                          { name: 'JACKET', img: '/images/jacket.png' },
-                          { name: 'SWEATSHIRTS', img: '/images/sweatshirts.png' },
-                        ].map((item, idx) => (
-                          <div key={idx} className="flex items-center justify-between bg-[#f8f8f8] pl-4 pr-1 py-1 h-[90px] rounded-sm group/banner cursor-pointer hover:bg-neutral-100 transition-colors">
-                            <span className="text-[10px] sm:text-xs font-bold tracking-widest text-neutral-800 group-hover/banner:text-black transition-colors">
-                              {item.name}
-                            </span>
-                            <div className="w-14 h-full overflow-hidden shrink-0 ml-2">
-                              <img src={item.img} alt={item.name} className="w-full h-full object-contain object-bottom scale-95 group-hover/banner:scale-100 transition-transform duration-300" />
+                          <div onClick={() => setActiveDropdown(null)} className="flex flex-col items-center text-center group/item cursor-pointer">
+                            <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-100 p-0.5 group-hover/item:border-black transition-colors duration-300">
+                              <img src="/images/fancy_top.png" alt="Fancy Top" className="w-full h-full object-cover rounded-full transition-transform duration-300 group-hover/item:scale-105" />
                             </div>
+                            <span className="mt-2 text-xs font-medium text-neutral-600 group-hover/item:text-black transition-colors">Fancy Top</span>
                           </div>
-                        ))}
+                          <div onClick={() => setActiveDropdown(null)} className="flex flex-col items-center text-center group/item cursor-pointer">
+                            <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-100 p-0.5 group-hover/item:border-black transition-colors duration-300">
+                              <img src="/images/jacket.png" alt="Pants" className="w-full h-full object-cover rounded-full transition-transform duration-300 group-hover/item:scale-105" />
+                            </div>
+                            <span className="mt-2 text-xs font-medium text-neutral-600 group-hover/item:text-black transition-colors">Pants</span>
+                          </div>
+                          <div onClick={() => setActiveDropdown(null)} className="flex flex-col items-center text-center group/item cursor-pointer">
+                            <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-100 p-0.5 group-hover/item:border-black transition-colors duration-300">
+                              <img src="/images/shorts.png" alt="Shorts" className="w-full h-full object-cover rounded-full transition-transform duration-300 group-hover/item:scale-105" />
+                            </div>
+                            <span className="mt-2 text-xs font-medium text-neutral-600 group-hover/item:text-black transition-colors">Shorts</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
 
+                      {/* Column 3: More to Explore */}
+                      <div className="pl-8 pr-4">
+                        <div className="mb-6">
+                          <h3 className="text-xs font-bold tracking-[0.2em] text-neutral-900 uppercase pb-2 border-b border-black inline-block">
+                            MORE TO EXPLORE
+                          </h3>
+                        </div>
+                        <div className="space-y-4">
+                          {[
+                            { name: 'Fancy Top', img: '/images/fancy_top.png' },
+                            { name: 'Jacket', img: '/images/jacket.png' },
+                            { name: 'Jeans', img: '/images/jeans.png' },
+                            { name: 'Men\'s Shorts', img: '/images/shorts.png' },
+                            { name: 'Pants', img: '/images/shirts.png' },
+                          ].map((exploreItem, idx) => (
+                            <div key={idx} onClick={() => setActiveDropdown(null)} className="flex items-center space-x-3 group/explore cursor-pointer">
+                              <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-100 p-0.5 group-hover/explore:border-black transition-colors duration-300">
+                                <img src={exploreItem.img} alt={exploreItem.name} className="w-full h-full object-cover rounded-full" />
+                              </div>
+                              <span className="text-xs font-semibold text-neutral-500 group-hover/explore:text-black transition-colors">{exploreItem.name}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Column 4: Featured */}
+                      <div className="pl-8">
+                        <div className="mb-6">
+                          <h3 className="text-xs font-bold tracking-[0.2em] text-neutral-900 uppercase pb-2 border-b border-black inline-block">
+                            FEATURED
+                          </h3>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          {[
+                            { name: 'SHIRTS', img: '/images/shirts.png' },
+                            { name: 'MEN\'S SHORTS', img: '/images/shorts.png' },
+                            { name: 'JACKET', img: '/images/jacket.png' },
+                            { name: 'SWEATSHIRTS', img: '/images/sweatshirts.png' },
+                          ].map((featItem, idx) => (
+                            <div key={idx} onClick={() => setActiveDropdown(null)} className="flex items-center justify-between bg-[#f8f8f8] pl-4 pr-1 py-1 h-[90px] rounded-sm group/banner cursor-pointer hover:bg-neutral-100 transition-colors">
+                              <span className="text-[10px] sm:text-xs font-bold tracking-widest text-neutral-800 group-hover/banner:text-black transition-colors">
+                                {featItem.name}
+                              </span>
+                              <div className="w-14 h-full overflow-hidden shrink-0 ml-2">
+                                <img src={featItem.img} alt={featItem.name} className="w-full h-full object-contain object-bottom scale-95 group-hover/banner:scale-100 transition-transform duration-300" />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Standard Dropdowns for other links */}
-              {item.hasDropdown && item.name !== 'Shop' && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-white border border-gray-100 rounded-lg shadow-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform scale-95 group-hover:scale-100 z-50">
-                  {item.subCategories?.map((sub, sIdx) => (
-                    <a key={sIdx} href="#" className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-black transition-colors">{sub}</a>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+                {/* Standard Dropdowns for other links */}
+                {item.hasDropdown && item.name !== 'Shop' && (
+                  <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-white border border-gray-100 rounded-lg shadow-xl py-2 transition-all duration-300 transform z-50 ${
+                    isOpen 
+                      ? 'opacity-100 visible scale-100 pointer-events-auto' 
+                      : 'opacity-0 invisible group-hover:opacity-100 group-hover:visible scale-95 group-hover:scale-100'
+                  }`}>
+                    {item.subCategories?.map((sub, sIdx) => (
+                      <a 
+                        key={sIdx} 
+                        href="#" 
+                        onClick={(e) => { e.preventDefault(); setActiveDropdown(null); }}
+                        className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-black transition-colors"
+                      >
+                        {sub}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </nav>
 
         {/* Right Action Icons (Adaptive spacing for Mobile / Tablet / Desktop) */}
@@ -322,7 +372,7 @@ export default function Header() {
                     <a 
                       key={sIdx} 
                       href="#" 
-                      onClick={() => setMobileMenuOpen(false)}
+                      onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); }}
                       className="flex items-center justify-between text-xs font-medium text-neutral-600 hover:text-black py-1.5 px-2 rounded-md hover:bg-neutral-100 transition-colors"
                     >
                       <span>{sub}</span>
@@ -467,4 +517,5 @@ export default function Header() {
     </header>
   );
 }
+
 
