@@ -36,20 +36,20 @@ export default function Categories() {
   const doubleCategories = [...categories, ...categories];
 
   return (
-    <section className="w-full pt-5 pb-2.5 border-b border-gray-100 overflow-hidden bg-white select-none">
+    <section className="w-full pt-3 sm:pt-5 pb-2.5 border-b border-gray-100 overflow-hidden bg-white select-none">
       <div className="w-full">
         <div className="relative w-full overflow-hidden mask-marquee">
           {/* Scrolling Track - No gap on track, padding is on the child elements */}
-          <div className="flex animate-marquee pt-4 pb-2">
+          <div className="flex animate-marquee pt-2 sm:pt-4 pb-2">
             {doubleCategories.map((item, idx) => (
               <div 
                 key={idx} 
-                className="flex flex-col items-center flex-shrink-0 px-3 sm:px-4 group cursor-pointer"
+                className="flex flex-col items-center flex-shrink-0 px-2 sm:px-3.5 lg:px-4 group cursor-pointer"
               >
                 {/* Outer Ring and White Space */}
-                <div className="relative rounded-full p-[2.5px] border border-gray-200 group-hover:border-black transition-colors duration-300">
+                <div className="relative rounded-full p-[2px] sm:p-[2.5px] border border-gray-200 group-hover:border-black transition-colors duration-300">
                   {/* White Inner Space / Border */}
-                  <div className="rounded-full overflow-hidden w-20 h-20 sm:w-24 sm:h-24 border-2 border-white bg-gray-50">
+                  <div className="rounded-full overflow-hidden w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 border border-white sm:border-2 bg-gray-50">
                     <img
                       src={item.image}
                       alt={item.name}
@@ -59,7 +59,7 @@ export default function Categories() {
                   </div>
                 </div>
                 {/* Label */}
-                <span className="mt-2.5 text-xs sm:text-[13px] font-medium text-gray-800 group-hover:text-black transition-colors duration-200">
+                <span className="mt-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-800 group-hover:text-black transition-colors duration-200">
                   {item.name}
                 </span>
               </div>
@@ -70,3 +70,4 @@ export default function Categories() {
     </section>
   );
 }
+

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const productsData = {
   'Fancy Top': [
@@ -215,25 +216,38 @@ const productsData = {
 export default function BestSellers() {
   const [activeTab, setActiveTab] = useState('Fancy Top');
   const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerPage = 4;
-  
+  const [itemsPerPage, setItemsPerPage] = useState(4);
+  const touchStartX = useRef(null);
+
+  // Dynamically update items per page based on viewport size
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      const width = window.innerWidth;
+      if (width < 480) {
+        setItemsPerPage(1);
+      } else if (width < 768) {
+        setItemsPerPage(2);
+      } else if (width < 1024) {
+        setItemsPerPage(3);
+      } else {
+        setItemsPerPage(4);
+      }
+    };
+
+    updateItemsPerPage();
+    window.addEventListener('resize', updateItemsPerPage);
+    return () => window.removeEventListener('resize', updateItemsPerPage);
+  }, []);
+
   const currentProducts = productsData[activeTab] || [];
-  const maxIndex = currentProducts.length - itemsPerPage;
+  const maxIndex = Math.max(0, currentProducts.length - itemsPerPage);
 
   const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    } else {
-      setCurrentIndex(maxIndex); // Loop to end
-    }
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : maxIndex));
   };
 
   const handleNext = () => {
-    if (currentIndex < maxIndex) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      setCurrentIndex(0); // Loop to start
-    }
+    setCurrentIndex((prev) => (prev < maxIndex ? prev + 1 : 0));
   };
 
   const selectTab = (tab) => {
@@ -241,25 +255,43 @@ export default function BestSellers() {
     setCurrentIndex(0); // Reset sliding index on tab change
   };
 
+  // Touch handlers for mobile swipe
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (!touchStartX.current) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diffX = touchStartX.current - touchEndX;
+
+    if (diffX > 40) {
+      handleNext(); // Swiped left
+    } else if (diffX < -40) {
+      handlePrev(); // Swiped right
+    }
+    touchStartX.current = null;
+  };
+
   return (
-    <section className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 py-16 select-none bg-white">
+    <section className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 py-10 sm:py-16 select-none bg-white">
       {/* Header Info */}
-      <div className="text-center max-w-xl mx-auto mb-8 space-y-4">
-        <h2 className="text-3xl sm:text-4xl font-extrabold tracking-wide text-neutral-900 uppercase">
+      <div className="text-center max-w-xl mx-auto mb-6 sm:mb-8 space-y-3 sm:space-y-4">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-wide text-neutral-900 uppercase">
           BEST SELLERS
         </h2>
-        <p className="text-neutral-500 text-sm sm:text-[14px] leading-relaxed">
-          iboth combine a consultancy mindset inlined territories to create an initne as possible.
+        <p className="text-neutral-500 text-xs sm:text-sm md:text-[14px] leading-relaxed px-2">
+          Discover our highest-rated pieces crafted for durability, comfort, and sophisticated style.
         </p>
       </div>
 
-      {/* Tabs list */}
-      <div className="flex justify-center space-x-6 sm:space-x-8 mb-12 border-b border-gray-100 pb-px">
+      {/* Tabs list (Scrollable on mobile) */}
+      <div className="flex justify-start sm:justify-center overflow-x-auto no-scrollbar space-x-6 sm:space-x-8 mb-8 sm:mb-12 border-b border-gray-100 pb-px px-2">
         {Object.keys(productsData).map((tab) => (
           <button
             key={tab}
             onClick={() => selectTab(tab)}
-            className={`text-sm font-semibold tracking-wide uppercase pb-3.5 transition-all duration-300 relative cursor-pointer focus:outline-none ${
+            className={`text-xs sm:text-sm font-semibold tracking-wide uppercase pb-3.5 transition-all duration-300 relative cursor-pointer focus:outline-none shrink-0 ${
               activeTab === tab ? 'text-neutral-900 font-bold' : 'text-neutral-400 hover:text-neutral-700'
             }`}
           >
@@ -274,8 +306,8 @@ export default function BestSellers() {
       {/* Main Slider Row */}
       <div className="flex items-start">
         
-        {/* Left Vertical Nav Indicator */}
-        <div className="hidden md:flex flex-col items-center space-y-4 shrink-0 mr-8 text-neutral-400">
+        {/* Left Vertical Nav Indicator (Desktop) */}
+        <div className="hidden md:flex flex-col items-center space-y-4 shrink-0 mr-6 lg:mr-8 text-neutral-400">
           <div className="w-4 h-4 rounded-full border border-neutral-900 flex items-center justify-center">
             <div className="w-1.5 h-1.5 rounded-full bg-neutral-900"></div>
           </div>
@@ -302,8 +334,12 @@ export default function BestSellers() {
           </button>
         </div>
 
-        {/* Carousel Grid View */}
-        <div className="flex-1 overflow-hidden py-2">
+        {/* Carousel Grid View with Swipe Support */}
+        <div 
+          className="flex-1 overflow-hidden py-2"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <div 
             className="flex transition-transform duration-500 ease-out"
             style={{ 
@@ -314,15 +350,15 @@ export default function BestSellers() {
             {currentProducts.map((item) => (
               <div 
                 key={item.id} 
-                className="px-3 shrink-0"
+                className="px-2 sm:px-3 shrink-0"
                 style={{ width: `${100 / currentProducts.length}%` }}
               >
                 <div className="flex flex-col group cursor-pointer">
                   {/* Card Container */}
-                  <div className="w-full aspect-[3/3.8] rounded-2xl overflow-hidden bg-[#f5f5f5] hover:bg-[#ebebeb] transition-colors duration-300 relative flex items-end justify-center p-4">
+                  <div className="w-full aspect-[3/3.8] rounded-xl sm:rounded-2xl overflow-hidden bg-[#f5f5f5] hover:bg-[#ebebeb] transition-colors duration-300 relative flex items-end justify-center p-3 sm:p-4">
                     {/* Vertical Sale Tag */}
                     {item.onSale && (
-                      <div className="absolute top-0 left-4 bg-[#e53e3e] text-white text-[9px] font-black uppercase tracking-widest px-1.5 py-3.5 z-10 flex flex-col items-center justify-center leading-none">
+                      <div className="absolute top-0 left-3 sm:left-4 bg-[#e53e3e] text-white text-[8px] sm:text-[9px] font-black uppercase tracking-widest px-1.5 py-2.5 sm:py-3.5 z-10 flex flex-col items-center justify-center leading-none rounded-b-sm">
                         <span>S</span>
                         <span>A</span>
                         <span>L</span>
@@ -337,23 +373,23 @@ export default function BestSellers() {
                     />
                   </div>
                   {/* Card Labels & Meta info */}
-                  <div className="mt-4 flex flex-col items-center space-y-2">
-                    <span className="text-center text-[13px] font-semibold text-neutral-800 group-hover:text-black transition-colors line-clamp-1">
+                  <div className="mt-3 sm:mt-4 flex flex-col items-center space-y-1.5 sm:space-y-2">
+                    <span className="text-center text-xs sm:text-[13px] font-semibold text-neutral-800 group-hover:text-black transition-colors line-clamp-1">
                       {item.name}
                     </span>
                     {/* Pricing */}
                     <div className="flex items-center text-xs">
                       {item.oldPrice && (
-                        <span className="text-neutral-400 line-through mr-2">{item.oldPrice}</span>
+                        <span className="text-neutral-400 line-through mr-1.5 sm:mr-2">{item.oldPrice}</span>
                       )}
                       <span className="font-bold text-neutral-800">{item.price}</span>
                     </div>
                     {/* Color Swatches */}
-                    <div className="flex items-center space-x-2 pt-1">
+                    <div className="flex items-center space-x-1.5 sm:space-x-2 pt-0.5 sm:pt-1">
                       {item.colors.map((color, cIdx) => (
                         <span 
                           key={cIdx} 
-                          className="w-3.5 h-3.5 rounded-full border border-neutral-300"
+                          className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full border border-neutral-300"
                           style={{ backgroundColor: color }}
                         />
                       ))}
@@ -366,12 +402,37 @@ export default function BestSellers() {
         </div>
       </div>
 
+      {/* Mobile / Tablet Horizontal Navigation Controls */}
+      <div className="flex md:hidden items-center justify-between mt-6 px-2">
+        <button 
+          onClick={handlePrev}
+          className="flex items-center space-x-1 text-xs font-bold tracking-wider text-neutral-700 hover:text-black bg-neutral-100 hover:bg-neutral-200 px-3 py-2 rounded-full transition-colors focus:outline-none"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          <span>PREV</span>
+        </button>
+        
+        {/* Page index indicator on mobile */}
+        <span className="text-xs font-bold text-neutral-600 tracking-wider">
+          {currentIndex + 1} / {maxIndex + 1}
+        </span>
+
+        <button 
+          onClick={handleNext}
+          className="flex items-center space-x-1 text-xs font-bold tracking-wider text-neutral-700 hover:text-black bg-neutral-100 hover:bg-neutral-200 px-3 py-2 rounded-full transition-colors focus:outline-none"
+        >
+          <span>NEXT</span>
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+
       {/* Centered View All Products Button */}
-      <div className="flex justify-center mt-12">
-        <button className="bg-[#a47e65] hover:bg-neutral-900 text-white text-xs font-bold tracking-[0.25em] uppercase px-10 py-4 transition-colors duration-300 cursor-pointer shadow-sm active:scale-98 select-none">
+      <div className="flex justify-center mt-8 sm:mt-12">
+        <button className="bg-[#a47e65] hover:bg-neutral-900 text-white text-[11px] sm:text-xs font-bold tracking-[0.25em] uppercase px-8 sm:px-10 py-3.5 sm:py-4 transition-colors duration-300 cursor-pointer shadow-sm active:scale-98 select-none rounded-none">
           ALL PRODUCTS
         </button>
       </div>
     </section>
   );
 }
+

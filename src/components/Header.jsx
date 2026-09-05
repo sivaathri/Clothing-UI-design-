@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, User, Heart, ShoppingBag, ChevronDown, Menu, X } from 'lucide-react';
+import { Search, User, Heart, ShoppingBag, ChevronDown, Menu, X, ChevronRight } from 'lucide-react';
 
 const allProducts = [
   { name: 'Shirts', image: '/images/shirts.png', price: 'Rs. 1,500.00' },
@@ -23,12 +23,13 @@ const allProducts = [
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Lock body scroll when search is open
+  // Lock body scroll when search or mobile drawer is open
   useEffect(() => {
-    if (isSearchOpen) {
+    if (isSearchOpen || mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -36,17 +37,45 @@ export default function Header() {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isSearchOpen]);
+  }, [isSearchOpen, mobileMenuOpen]);
 
   const navItems = [
-    { name: 'Shop', hasDropdown: true },
-    { name: 'Men', hasDropdown: true },
-    { name: 'Women', hasDropdown: true },
-    { name: 'Collections', hasDropdown: true },
-    { name: 'Product', hasDropdown: true },
+    { 
+      name: 'Shop', 
+      hasDropdown: true,
+      subCategories: ['Fancy Top', 'Jacket', 'Jeans', "Men's Shorts", 'Pants', 'Shirts', 'Shorts', 'Sweatshirts', 'T-Shirts']
+    },
+    { 
+      name: 'Men', 
+      hasDropdown: true,
+      subCategories: ['Shirts', 'T-Shirts', 'Jackets', 'Jeans', 'Shorts', 'Suits'] 
+    },
+    { 
+      name: 'Women', 
+      hasDropdown: true,
+      subCategories: ['Fancy Tops', 'Dresses', 'Jeans', 'Hoodies', 'Accessories'] 
+    },
+    { 
+      name: 'Collections', 
+      hasDropdown: true,
+      subCategories: ['Summer 2026', 'Urban Outerwear', 'Best Sellers', 'New Arrivals'] 
+    },
+    { 
+      name: 'Product', 
+      hasDropdown: true,
+      subCategories: ['All Products', 'Featured Items', 'Discounts'] 
+    },
     { name: 'Blog', hasDropdown: false },
-    { name: 'Pages', hasDropdown: true },
+    { 
+      name: 'Pages', 
+      hasDropdown: true,
+      subCategories: ['About Us', 'Contact Us', 'FAQ', 'Size Guide'] 
+    },
   ];
+
+  const toggleMobileCategory = (name) => {
+    setExpandedMobileCategory(prev => prev === name ? null : name);
+  };
 
   // Filter products based on search query
   const searchResults = searchQuery
@@ -55,33 +84,42 @@ export default function Header() {
 
   return (
     <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 transition-all duration-300">
-      <div className="w-full px-4 sm:px-8 lg:px-12 h-20 flex items-center justify-between">
+      <div className="w-full px-3 sm:px-6 lg:px-12 h-16 sm:h-20 flex items-center justify-between">
         
+        {/* Mobile menu burger button (left on mobile) */}
+        <button 
+          className="lg:hidden text-gray-700 hover:text-black p-1.5 transition-colors cursor-pointer focus:outline-none shrink-0"
+          onClick={() => setMobileMenuOpen(true)}
+          aria-label="Open navigation menu"
+        >
+          <Menu className="w-6 h-6 stroke-[1.75]" />
+        </button>
+
         {/* Logo */}
         <div className="flex-shrink-0">
-          <a href="#" className="text-2xl font-bold tracking-[0.25em] text-gray-900 select-none hover:opacity-80 transition-opacity">
+          <a href="#" className="text-xl sm:text-2xl font-bold tracking-[0.25em] text-gray-900 select-none hover:opacity-80 transition-opacity">
            Clothes
           </a>
         </div>
 
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex space-x-8">
+        {/* Desktop Nav (lg and above) */}
+        <nav className="hidden lg:flex space-x-6 xl:space-x-8">
           {navItems.map((item) => (
             <div 
               key={item.name} 
               className={`${item.name === 'Shop' ? '' : 'relative'} group py-2`}
             >
-              <button className="flex items-center text-[15px] font-medium text-gray-700 hover:text-black transition-colors duration-200 cursor-pointer focus:outline-none">
+              <button className="flex items-center text-sm xl:text-[15px] font-medium text-gray-700 hover:text-black transition-colors duration-200 cursor-pointer focus:outline-none">
                 {item.name}
                 {item.hasDropdown && (
-                  <ChevronDown className="w-4.5 h-4.5 ml-1 text-gray-400 group-hover:text-black transition-transform duration-300 group-hover:rotate-180" />
+                  <ChevronDown className="w-4 h-4 ml-1 text-gray-400 group-hover:text-black transition-transform duration-300 group-hover:rotate-180" />
                 )}
               </button>
 
               {/* Mega Dropdown Menu for Shop */}
               {item.hasDropdown && item.name === 'Shop' && (
                 <div className="absolute top-full left-0 right-0 w-full bg-white border-b border-gray-100 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                  <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 py-10 grid grid-cols-4 gap-8 divide-x divide-gray-100 text-left">
+                  <div className="max-w-[1440px] mx-auto px-6 lg:px-12 py-10 grid grid-cols-4 gap-8 divide-x divide-gray-100 text-left">
                     
                     {/* Column 1: Shop By Category */}
                     <div className="pr-4">
@@ -91,15 +129,9 @@ export default function Header() {
                         </h3>
                       </div>
                       <ul className="space-y-3.5 text-[14px] text-neutral-500 font-medium">
-                        <li><a href="#" className="hover:text-black transition-colors block">Fancy Top</a></li>
-                        <li><a href="#" className="hover:text-black transition-colors block">Jacket</a></li>
-                        <li><a href="#" className="hover:text-black transition-colors block">Jeans</a></li>
-                        <li><a href="#" className="hover:text-black transition-colors block">Men's Shorts</a></li>
-                        <li><a href="#" className="hover:text-black transition-colors block">Pants</a></li>
-                        <li><a href="#" className="hover:text-black transition-colors block">Shirts</a></li>
-                        <li><a href="#" className="hover:text-black transition-colors block">Shorts</a></li>
-                        <li><a href="#" className="hover:text-black transition-colors block">Sweatshirts</a></li>
-                        <li><a href="#" className="hover:text-black transition-colors block">T-Shirts</a></li>
+                        {item.subCategories.map((sub, sIdx) => (
+                          <li key={sIdx}><a href="#" className="hover:text-black transition-colors block">{sub}</a></li>
+                        ))}
                       </ul>
                     </div>
 
@@ -196,117 +228,169 @@ export default function Header() {
               {/* Standard Dropdowns for other links */}
               {item.hasDropdown && item.name !== 'Shop' && (
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-white border border-gray-100 rounded-lg shadow-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform scale-95 group-hover:scale-100 z-50">
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-black transition-colors">New Arrivals</a>
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-black transition-colors">Best Sellers</a>
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-black transition-colors">Trending</a>
+                  {item.subCategories?.map((sub, sIdx) => (
+                    <a key={sIdx} href="#" className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-black transition-colors">{sub}</a>
+                  ))}
                 </div>
               )}
             </div>
           ))}
         </nav>
 
-        {/* Right Icons */}
-        <div className="flex items-center space-x-6">
+        {/* Right Action Icons (Adaptive spacing for Mobile / Tablet / Desktop) */}
+        <div className="flex items-center space-x-2.5 sm:space-x-5 md:space-x-6">
           <button 
             onClick={() => setIsSearchOpen(true)}
-            className="text-gray-700 hover:text-black p-1 transition-colors cursor-pointer focus:outline-none" 
+            className="text-gray-700 hover:text-black p-1.5 transition-colors cursor-pointer focus:outline-none" 
             aria-label="Search"
           >
-            <Search className="w-5.5 h-5.5 stroke-[1.5]" />
+            <Search className="w-5 h-5 sm:w-5.5 sm:h-5.5 stroke-[1.75]" />
           </button>
           
-          <button className="text-gray-700 hover:text-black p-1 transition-colors cursor-pointer focus:outline-none" aria-label="Account">
-            <User className="w-5.5 h-5.5 stroke-[1.5]" />
+          <button className="text-gray-700 hover:text-black p-1.5 transition-colors cursor-pointer focus:outline-none" aria-label="Account">
+            <User className="w-5 h-5 sm:w-5.5 sm:h-5.5 stroke-[1.75]" />
           </button>
 
           {/* Wishlist */}
-          <button className="relative text-gray-700 hover:text-black p-1 transition-colors cursor-pointer focus:outline-none" aria-label="Wishlist">
-            <Heart className="w-5.5 h-5.5 stroke-[1.5]" />
-            <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] font-bold w-4.5 h-4.5 flex items-center justify-center rounded-full border border-white">
+          <button className="relative text-gray-700 hover:text-black p-1.5 transition-colors cursor-pointer focus:outline-none" aria-label="Wishlist">
+            <Heart className="w-5 h-5 sm:w-5.5 sm:h-5.5 stroke-[1.75]" />
+            <span className="absolute top-0 right-0 sm:-top-1 sm:-right-1 bg-red-600 text-white text-[9px] sm:text-[10px] font-bold w-4 h-4 sm:w-4.5 sm:h-4.5 flex items-center justify-center rounded-full border border-white">
               2
             </span>
           </button>
 
           {/* Cart */}
-          <button className="flex items-center space-x-1.5 text-gray-700 hover:text-black p-1 transition-colors cursor-pointer focus:outline-none" aria-label="Cart">
-            <span className="text-[15px] font-medium hidden sm:inline">Cart</span>
+          <button className="flex items-center space-x-1.5 text-gray-700 hover:text-black p-1.5 transition-colors cursor-pointer focus:outline-none" aria-label="Cart">
+            <span className="text-[14px] font-medium hidden sm:inline">Cart</span>
             <div className="relative">
-              <ShoppingBag className="w-5.5 h-5.5 stroke-[1.5]" />
-              <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] font-bold w-4.5 h-4.5 flex items-center justify-center rounded-full border border-white">
+              <ShoppingBag className="w-5 h-5 sm:w-5.5 sm:h-5.5 stroke-[1.75]" />
+              <span className="absolute top-0 right-0 sm:-top-1 sm:-right-1 bg-red-600 text-white text-[9px] sm:text-[10px] font-bold w-4 h-4 sm:w-4.5 sm:h-4.5 flex items-center justify-center rounded-full border border-white">
                 3
               </span>
             </div>
           </button>
-
-          {/* Mobile Menu Button */}
-          <button 
-            className="lg:hidden text-gray-700 hover:text-black p-1 transition-colors cursor-pointer focus:outline-none"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
         </div>
       </div>
 
-      {/* Mobile Nav Menu */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-gray-100 bg-white py-4 px-6 absolute left-0 right-0 shadow-lg z-50">
-          <div className="flex flex-col space-y-4">
-            {navItems.map((item) => (
-              <div key={item.name} className="border-b border-gray-50 pb-2">
-                <button className="flex items-center justify-between w-full text-base font-medium text-gray-700 hover:text-black py-1 focus:outline-none">
-                  {item.name}
-                  {item.hasDropdown && <ChevronDown className="w-4 h-4 text-gray-400" />}
-                </button>
+      {/* Slide-out Mobile Menu Drawer & Overlay */}
+      <div 
+        className={`fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity duration-300 lg:hidden z-[90] ${
+          mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+        }`}
+        onClick={() => setMobileMenuOpen(false)}
+      />
+
+      <div 
+        className={`fixed top-0 left-0 h-full w-[85%] max-w-[340px] bg-white shadow-2xl transition-transform duration-300 ease-out lg:hidden z-[100] flex flex-col ${
+          mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        {/* Mobile Header Top */}
+        <div className="p-5 border-b border-gray-100 flex items-center justify-between bg-neutral-50">
+          <span className="text-xs font-bold tracking-[0.25em] text-neutral-800 uppercase">
+            Menu Navigation
+          </span>
+          <button 
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-neutral-500 hover:text-black p-1 transition-colors cursor-pointer focus:outline-none"
+            aria-label="Close menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Mobile Menu Accordion Items */}
+        <div className="flex-1 overflow-y-auto p-5 space-y-2 no-scrollbar">
+          {navItems.map((item) => (
+            <div key={item.name} className="border-b border-gray-100 pb-2">
+              <button 
+                onClick={() => item.hasDropdown ? toggleMobileCategory(item.name) : setMobileMenuOpen(false)}
+                className="flex items-center justify-between w-full py-2.5 text-sm font-semibold text-neutral-800 hover:text-black transition-colors focus:outline-none cursor-pointer"
+              >
+                <span>{item.name}</span>
                 {item.hasDropdown && (
-                  <div className="pl-4 mt-2 space-y-2 border-l-2 border-gray-100">
-                    <a href="#" className="block text-sm text-gray-500 hover:text-black">New Arrivals</a>
-                    <a href="#" className="block text-sm text-gray-500 hover:text-black">Best Sellers</a>
-                  </div>
+                  <ChevronDown className={`w-4 h-4 text-neutral-400 transition-transform duration-300 ${
+                    expandedMobileCategory === item.name ? 'rotate-180 text-black' : ''
+                  }`} />
                 )}
-              </div>
-            ))}
+              </button>
+              
+              {/* Accordion Sub-items */}
+              {item.hasDropdown && expandedMobileCategory === item.name && (
+                <div className="pl-3 py-2 space-y-2 bg-neutral-50 rounded-lg border-l-2 border-neutral-900 my-1">
+                  {item.subCategories?.map((sub, sIdx) => (
+                    <a 
+                      key={sIdx} 
+                      href="#" 
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-between text-xs font-medium text-neutral-600 hover:text-black py-1.5 px-2 rounded-md hover:bg-neutral-100 transition-colors"
+                    >
+                      <span>{sub}</span>
+                      <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+
+          {/* Quick info inside mobile drawer */}
+          <div className="pt-6 space-y-4">
+            <div className="p-4 bg-neutral-900 text-white rounded-xl space-y-2">
+              <span className="text-[10px] font-bold tracking-widest uppercase text-amber-400 block">
+                Special Offer
+              </span>
+              <p className="text-xs font-medium text-neutral-200">
+                Get 10% OFF on your first purchase. Use code: <span className="font-bold text-white">ARLUNE10</span>
+              </p>
+            </div>
           </div>
         </div>
-      )}
 
-      {/* Backdrop Overlay for Search */}
+        {/* Mobile Drawer Footer */}
+        <div className="p-5 border-t border-gray-100 bg-neutral-50 text-xs text-neutral-500 space-y-2 font-medium">
+          <p>Need assistance? Contact support</p>
+          <p className="font-bold text-neutral-800">+1234 567 890 • help@gmail.com</p>
+        </div>
+      </div>
+
+      {/* Search Overlay Backdrop */}
       <div 
-        className={`fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity duration-500 z-[90] ${
+        className={`fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity duration-300 z-[90] ${
           isSearchOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
         }`}
         onClick={() => setIsSearchOpen(false)}
       />
 
-      {/* Left to Right Search Drawer */}
+      {/* Left-to-Right Search Drawer (Responsive max-w-full sm:max-w-[460px]) */}
       <div 
-        className={`fixed top-0 left-0 h-full w-full sm:w-[460px] bg-white shadow-2xl transition-transform duration-500 ease-out z-[100] flex flex-col ${
+        className={`fixed top-0 left-0 h-full w-full sm:w-[460px] bg-white shadow-2xl transition-transform duration-300 ease-out z-[100] flex flex-col ${
           isSearchOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Drawer Header */}
-        <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+        <div className="p-5 sm:p-6 border-b border-gray-100 flex items-center justify-between">
           <span className="text-xs font-bold tracking-[0.25em] text-neutral-800 uppercase">
-            Search our store
+            Search store
           </span>
           <button 
             onClick={() => setIsSearchOpen(false)}
             className="text-neutral-500 hover:text-black transition-colors p-1 cursor-pointer focus:outline-none"
+            aria-label="Close search"
           >
             <X className="w-5 h-5 stroke-[1.5]" />
           </button>
         </div>
 
         {/* Drawer Input Area */}
-        <div className="p-6">
+        <div className="p-5 sm:p-6">
           <div className="relative border-b border-neutral-900 pb-2">
             <input 
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Type to search products..."
-              className="w-full bg-transparent text-neutral-800 placeholder-neutral-400 text-sm focus:outline-none pr-8 font-medium"
+              className="w-full bg-transparent text-neutral-800 placeholder-neutral-400 text-sm sm:text-base focus:outline-none pr-8 font-medium"
               autoFocus={isSearchOpen}
             />
             <Search className="w-5 h-5 text-neutral-400 absolute right-0 top-1/2 -translate-y-1/2 stroke-[1.5]" />
@@ -314,7 +398,7 @@ export default function Header() {
         </div>
 
         {/* Search Results Area */}
-        <div className="flex-1 overflow-y-auto px-6 pb-6 no-scrollbar">
+        <div className="flex-1 overflow-y-auto px-5 sm:px-6 pb-6 no-scrollbar">
           {searchQuery && searchResults.length === 0 && (
             <div className="text-center py-10 text-neutral-400 text-sm font-medium">
               No products found for "{searchQuery}"
@@ -326,7 +410,7 @@ export default function Header() {
               <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase block mb-2">
                 Products found ({searchResults.length})
               </span>
-              <div className="space-y-3.5">
+              <div className="space-y-3">
                 {searchResults.map((product, idx) => (
                   <div key={idx} className="flex items-center space-x-4 p-2.5 rounded-xl hover:bg-neutral-50 transition-colors cursor-pointer group">
                     <div className="w-14 h-16 rounded-lg overflow-hidden bg-neutral-50 flex items-center justify-center p-1 shrink-0">
@@ -383,3 +467,4 @@ export default function Header() {
     </header>
   );
 }
+

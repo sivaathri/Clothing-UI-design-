@@ -5,4 +5,8 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    host: true, // Exposes server on network so you can test on mobile/tablet via Wi-Fi IP
+  },
 })
+

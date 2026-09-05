@@ -54,8 +54,8 @@ export default function Hero() {
   const current = slides[activeSlide];
 
   return (
-    <section className="w-full pb-12 select-none">
-      <div className="relative w-full aspect-[16/6.2] md:aspect-[21/7.2] min-h-[360px] sm:min-h-[430px] rounded-none overflow-hidden bg-neutral-100 shadow-sm transition-all duration-700">
+    <section className="w-full pb-6 sm:pb-12 select-none">
+      <div className="relative w-full aspect-[4/3] sm:aspect-[16/7] md:aspect-[21/7.5] min-h-[450px] sm:min-h-[500px] md:min-h-[560px] lg:min-h-[620px] rounded-none overflow-hidden bg-neutral-100 shadow-sm transition-all duration-700">
         
         {/* Slide Images */}
         {slides.map((slide, idx) => (
@@ -66,7 +66,7 @@ export default function Hero() {
             }`}
           >
             {/* Background image overlay to make text readable */}
-            <div className="absolute inset-0 bg-black/10 z-10"></div>
+            <div className="absolute inset-0 bg-black/20 sm:bg-black/10 z-10"></div>
             <img
               src={slide.image}
               alt={slide.heading}
@@ -77,7 +77,7 @@ export default function Hero() {
         ))}
 
         {/* Content Overlay */}
-        <div className="absolute inset-0 z-20 flex items-center px-8 sm:px-16 md:px-24">
+        <div className="absolute inset-0 z-20 flex items-center px-4 sm:px-12 md:px-20 lg:px-24">
           <div className="w-full grid grid-cols-1 md:grid-cols-2 h-full items-center">
             
             {/* Empty space for alignment when text is right-aligned */}
@@ -85,23 +85,23 @@ export default function Hero() {
 
             {/* Text panel */}
             <div 
-              className={`flex flex-col justify-center items-center md:items-start text-center md:text-left space-y-5 md:space-y-6 ${
-                current.align === 'right' ? 'md:pl-16' : 'md:pr-16'
+              className={`flex flex-col justify-center items-center md:items-start text-center md:text-left space-y-4 sm:space-y-5 md:space-y-6 ${
+                current.align === 'right' ? 'md:pl-12 lg:pl-16' : 'md:pr-12 lg:pr-16'
               }`}
             >
-              <span className="text-[11px] sm:text-xs font-bold tracking-[0.3em] text-neutral-800 uppercase block drop-shadow-sm">
+              <span className="text-[10px] sm:text-xs font-bold tracking-[0.25em] sm:tracking-[0.3em] text-neutral-900 sm:text-neutral-800 uppercase block bg-white/70 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none px-3 py-1 sm:p-0 rounded-full">
                 {current.subtitle}
               </span>
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-neutral-900 leading-[1.05] drop-shadow-sm font-sans">
+              <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-neutral-900 leading-tight sm:leading-[1.05] drop-shadow-sm font-sans">
                 {current.heading}
               </h2>
-              <p className="text-neutral-800 text-sm sm:text-base max-w-sm leading-relaxed font-medium drop-shadow-sm">
+              <p className="text-neutral-800 sm:text-neutral-700 text-xs sm:text-sm md:text-base max-w-[290px] sm:max-w-md leading-relaxed font-medium drop-shadow-sm">
                 {current.paragraph}
               </p>
               <div className="pt-2">
                 <a
                   href="#"
-                  className="inline-block px-8 py-3.5 bg-black text-white text-xs font-bold tracking-[0.2em] uppercase hover:bg-neutral-900 active:scale-98 transition-all shadow-md rounded-none"
+                  className="inline-block px-6 py-3 sm:px-8 sm:py-3.5 bg-black text-white text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase hover:bg-neutral-900 active:scale-98 transition-all shadow-md rounded-none"
                 >
                   {current.buttonText}
                 </a>
@@ -116,29 +116,29 @@ export default function Hero() {
         {/* Left Arrow */}
         <button
           onClick={handlePrev}
-          className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 bg-white/90 hover:bg-white text-neutral-900 rounded-full flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
+          className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-11 sm:h-11 bg-white/80 hover:bg-white text-neutral-900 rounded-full flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
           aria-label="Previous slide"
         >
-          <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
+          <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
         </button>
 
         {/* Right Arrow */}
         <button
           onClick={handleNext}
-          className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 bg-white/90 hover:bg-white text-neutral-900 rounded-full flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
+          className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-11 sm:h-11 bg-white/80 hover:bg-white text-neutral-900 rounded-full flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
           aria-label="Next slide"
         >
-          <ChevronRight className="w-5 h-5 stroke-[2.5]" />
+          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
         </button>
 
         {/* Indicator Dots / Pills */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex space-x-2.5">
+        <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-30 flex space-x-2.5">
           {slides.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setActiveSlide(idx)}
               className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                idx === activeSlide ? 'w-8 bg-black' : 'w-4 bg-white/70 hover:bg-white'
+                idx === activeSlide ? 'w-6 sm:w-8 bg-black' : 'w-3 sm:w-4 bg-white/70 hover:bg-white'
               }`}
               aria-label={`Go to slide ${idx + 1}`}
             />
@@ -147,7 +147,7 @@ export default function Hero() {
 
         {/* Bottom Left Notification overlay */}
         {showNotification && (
-          <div className="absolute bottom-6 left-6 z-30 hidden md:flex items-center bg-white/95 backdrop-blur-md px-4 py-3 rounded-2xl shadow-xl border border-white/50 w-72 max-w-xs transition-all duration-300 hover:shadow-2xl">
+          <div className="absolute bottom-5 left-5 z-30 hidden lg:flex items-center bg-white/95 backdrop-blur-md px-4 py-3 rounded-2xl shadow-xl border border-white/50 w-72 max-w-xs transition-all duration-300 hover:shadow-2xl">
             {/* Thumbnail */}
             <div className="w-12 h-16 rounded-lg overflow-hidden flex-shrink-0 mr-3 border border-neutral-100">
               <img
@@ -185,7 +185,7 @@ export default function Hero() {
         )}
 
         {/* Bottom Right lookbook preview grid */}
-        <div className="absolute bottom-6 right-6 z-30 hidden md:block">
+        <div className="absolute bottom-6 right-6 z-30 hidden lg:block">
           <div className="bg-white/95 backdrop-blur-md p-1.5 rounded-2xl shadow-xl border border-white/50 w-36 hover:scale-103 transition-transform cursor-pointer">
             <img
               src="/images/mini_lookbook.png"
@@ -199,3 +199,4 @@ export default function Hero() {
     </section>
   );
 }
+
