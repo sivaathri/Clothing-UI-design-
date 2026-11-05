@@ -1,21 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { arrivals } from '../data/arrivalsData';
 
-const arrivals = [
-  { id: 1, name: 'Shirts', image: '/images/shirts.png' },
-  { id: 2, name: 'Jeans', image: '/images/jeans.png' },
-  { id: 3, name: 'Fancy Top', image: '/images/fancy_top.png' },
-  { id: 4, name: 'T-Shirts', image: '/images/tshirts.png' },
-  { id: 5, name: 'Sweatshirts', image: '/images/sweatshirts.png' },
-  { id: 6, name: 'Jacket', image: '/images/jacket.png' },
-  { id: 7, name: 'Hoodies', image: '/images/hoodies.png' },
-  { id: 8, name: 'Shorts', image: '/images/shorts.png' },
-  { id: 9, name: 'Dress', image: '/images/dress.png' },
-  { id: 10, name: 'Shoes', image: '/images/shoes.png' },
-  { id: 11, name: 'Accessories', image: '/images/accessories.png' },
-];
-
-export default function NewArrivals() {
+export default function NewArrivals({ onSelectProduct }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(4);
   const touchStartX = useRef(null);
@@ -80,7 +67,7 @@ export default function NewArrivals() {
         </h2>
         <p className="text-neutral-500 text-xs sm:text-sm md:text-[14px] leading-relaxed px-2">
           We are delighted to offer you pieces of the highest quality. A brand synonymous
-          to them for their premium quality and enduring style.
+          to them for their premium quality and enduring style. Click any product to explore full details.
         </p>
       </div>
 
@@ -127,20 +114,43 @@ export default function NewArrivals() {
                 className="px-2 sm:px-3 shrink-0"
                 style={{ width: `${100 / arrivals.length}%` }}
               >
-                <div className="flex flex-col group cursor-pointer">
+                <div 
+                  onClick={() => onSelectProduct && onSelectProduct(item)}
+                  className="flex flex-col group cursor-pointer text-left"
+                >
                   {/* Card Container */}
-                  <div className="w-full aspect-[3/3.8] rounded-xl sm:rounded-2xl overflow-hidden bg-[#f5f5f5] hover:bg-[#ebebeb] transition-colors duration-300 relative flex items-end justify-center p-3 sm:p-4">
+                  <div className="w-full aspect-[3/3.8] rounded-xl sm:rounded-2xl overflow-hidden bg-[#f5f5f5] hover:bg-[#ebebeb] transition-all duration-300 relative flex items-end justify-center p-3 sm:p-4 group-hover:shadow-md">
+                    {/* Badge */}
+                    {item.badge && (
+                      <span className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-full text-[9px] font-extrabold tracking-widest bg-white/95 backdrop-blur-xs text-neutral-900 shadow-xs uppercase">
+                        {item.badge}
+                      </span>
+                    )}
+
+                    {/* View Details button overlay on hover */}
+                    <div className="absolute inset-0 bg-black/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
+                      <span className="px-4 py-2 bg-white text-neutral-900 rounded-full text-xs font-bold tracking-wider uppercase shadow-xl transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 border border-neutral-100">
+                        View Product
+                      </span>
+                    </div>
+
                     <img 
                       src={item.image} 
                       alt={item.name} 
                       draggable="false"
-                      className="w-full h-[95%] object-contain object-bottom transition-transform duration-500 group-hover:scale-103"
+                      className="w-full h-[95%] object-contain object-bottom transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
-                  {/* Card Label */}
-                  <span className="mt-3 sm:mt-4 text-center text-xs sm:text-sm font-semibold tracking-wide text-neutral-800 group-hover:text-black transition-colors truncate">
-                    {item.name}
-                  </span>
+
+                  {/* Card Label & Pricing */}
+                  <div className="mt-3 sm:mt-4 text-center">
+                    <span className="block text-xs sm:text-sm font-bold tracking-wide text-neutral-800 group-hover:text-black transition-colors truncate">
+                      {item.name}
+                    </span>
+                    <span className="text-[11px] sm:text-xs font-semibold text-neutral-500 mt-0.5 block">
+                      {item.price}
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -184,4 +194,3 @@ export default function NewArrivals() {
     </section>
   );
 }
-

@@ -21,7 +21,7 @@ const allProducts = [
   { name: 'Premium Wool Tuxedo', image: '/images/shirts.png', price: 'Rs. 7,800.00' },
 ];
 
-export default function Header() {
+export default function Header({ onHomeClick }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -116,7 +116,16 @@ export default function Header() {
 
         {/* Logo */}
         <div className="flex-shrink-0">
-          <a href="#" className="text-xl sm:text-2xl font-bold tracking-[0.25em] text-gray-900 select-none hover:opacity-80 transition-opacity">
+          <a 
+            href="#" 
+            onClick={(e) => {
+              if (onHomeClick) {
+                e.preventDefault();
+                onHomeClick();
+              }
+            }}
+            className="text-xl sm:text-2xl font-bold tracking-[0.25em] text-gray-900 select-none hover:opacity-80 transition-opacity"
+          >
            Clothes
           </a>
         </div>
